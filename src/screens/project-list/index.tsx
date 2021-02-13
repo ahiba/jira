@@ -3,6 +3,8 @@ import { SearchPannel } from "./search-pannel"
 import { List } from './list'
 import { cleanObject, useMount, useDebounce } from '../../utils'
 import  QS from 'qs'
+import { useHttp } from '../../utils/http'
+import { Table } from 'antd'
 
 const apiUrl = process.env.REACT_APP_API_URL
 console.log('process.env', process.env)
@@ -16,21 +18,14 @@ export const ProjectListScreen = () => {
     })
     const [list, setList] = useState([])
     const useDebounceParam = useDebounce(param, 2000)
+    const client = useHttp()
+    client('projects', {data:cleanObject(useDebounceParam)})
     useEffect(() => {
-        fetch(`${apiUrl}/projects?${QS.stringify(cleanObject(useDebounceParam))}`).then(async response => {
-            if(response.ok) {
-                setList(await response.json())
-            }
-        })
+        client('projects', {data:cleanObject(useDebounceParam)}).then(setList)
     }, [useDebounceParam])
 
     useMount(() => {
-        fetch(`${apiUrl}/users`).then(async response => {
-            if(response.ok) {
-                setUsers(await response.json())
-            }
-        })
-
+        client('users').then(setUsers)
     })
     return (
         <div>
