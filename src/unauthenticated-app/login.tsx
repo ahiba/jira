@@ -1,7 +1,7 @@
 import React from 'react'
-import { cleanObject, useMount, useDebounce } from '../../utils'
+import { cleanObject, useMount, useDebounce } from '../utils'
 import  QS from 'qs'
-import { useAuth } from '../../context/auth-context'
+import { useAuth } from '../context/auth-context'
 
 const apiUrl = process.env.REACT_APP_API_URL
 console.log('process.env', process.env)
