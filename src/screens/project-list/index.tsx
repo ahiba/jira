@@ -5,32 +5,28 @@ import { cleanObject, useMount, useDebounce } from '../../utils'
 import  QS from 'qs'
 import { useHttp } from '../../utils/http'
 import { Table } from 'antd'
+import { useAsync } from '../../utils/use-async'
+import { Project } from './list'
+import { useProjects } from '../../utils/project'
+import { useUsers } from '../../utils/user'
 
 const apiUrl = process.env.REACT_APP_API_URL
 console.log('process.env', process.env)
 
 export const ProjectListScreen = () => {
-    const [users, setUsers] = useState([])
-
     const [param, setParam] = useState({
         name: '',
         personId: ''
     })
-    const [list, setList] = useState([])
     const useDebounceParam = useDebounce(param, 2000)
     const client = useHttp()
-    client('projects', {data:cleanObject(useDebounceParam)})
-    useEffect(() => {
-        client('projects', {data:cleanObject(useDebounceParam)}).then(setList)
-    }, [useDebounceParam])
+    const {isLoading, error, data: list } = useProjects(useDebounceParam)
 
-    useMount(() => {
-        client('users').then(setUsers)
-    })
+    const { data: users } = useUsers()
     return (
         <div>
-            <SearchPannel users={users} param={param} setParam={setParam}/>
-            <List users={users} list={list}/>
+            <SearchPannel users={users || []} param={param} setParam={setParam}/>
+            <List loading={isLoading} users={users || []} dataSource={list || []}/>
         </div>
     )
 }

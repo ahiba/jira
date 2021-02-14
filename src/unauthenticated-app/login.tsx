@@ -6,7 +6,7 @@ import  { Form, Input, Button } from 'antd'
 
 const apiUrl = process.env.REACT_APP_API_URL
 console.log('process.env', process.env)
-export const LoginScreen = () => {
+export const LoginScreen = ({onError}:{onError:(error:Error) => void}) => {
     const { login, user } = useAuth()
     // const login = (param: {username: string, password: string}) => {
     //     fetch(`${apiUrl}/login`, {
@@ -21,8 +21,13 @@ export const LoginScreen = () => {
     //         }
     //     })
     // }
-    const handleSubmit = (values:{username:string, password:string}) => {
-        login(values)
+    const handleSubmit = async (values:{username:string, password:string}) => {
+        // login(values)
+        try {
+           await login(values)
+        } catch(e) {
+            onError(e)
+        }
     }
     return <Form onFinish={handleSubmit}>
         <Form.Item name={'username'} rules={[{required: true, message: '请输入用户名'}]}>

@@ -1,17 +1,19 @@
 import { useState } from 'react'
 import { LoginScreen } from './login'
 import { RegisterScreen } from './register'
-import { Card, Button } from 'antd'
+import { Card, Button, Typography } from 'antd'
 import styled from '@emotion/styled'
 
 export const UnauthenticatedApp = () => {
     const [isRegister, setIsRegister] = useState(false)
+    const [error, setError] = useState<Error | null>(null)
 
     return (
         <Container>
             <ShadowCard style={{width:'600px'}}>
+                {error ? <Typography.Text type={"danger"}>{error.message}</Typography.Text> : null}
                 {
-                    isRegister ? <RegisterScreen /> : <LoginScreen />
+                    isRegister ? <RegisterScreen onError={setError}/> : <LoginScreen onError={setError}/>
                 }
                 <Button onClick={() => {
                     setIsRegister(!isRegister)

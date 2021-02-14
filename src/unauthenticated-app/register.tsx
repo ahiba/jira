@@ -6,7 +6,7 @@ import  { Form, Input, Button } from 'antd'
 
 const apiUrl = process.env.REACT_APP_API_URL
 console.log('process.env', process.env)
-export const RegisterScreen = () => {
+export const RegisterScreen = ({onError}:{onError:(error:Error) => void}) => {
     const { register, user } = useAuth()
     // const handleSubmit = (event:React.FormEvent<HTMLFormElement>) => {
     //     event.preventDefault()
@@ -14,8 +14,12 @@ export const RegisterScreen = () => {
     //     const password = (event.currentTarget.elements[1] as HTMLInputElement).value 
     //     register({username, password})
     // }
-    const handleSubmit = (values:{username:string, password:string}) => {
-        register(values)
+    const handleSubmit = async (values:{username:string, password:string}) => {
+        try {
+           await register(values)
+        } catch(e) {
+            onError(e)
+        }
     }
     return <Form onFinish={handleSubmit}>
         <Form.Item name={'username'} rules={[{required: true, message: '请输入用户名'}]}>

@@ -1,19 +1,19 @@
 import React from 'react'
 import { User } from './search-pannel'
-import { Table } from 'antd'
-interface Project {
+import { Table, TableProps } from 'antd'
+export interface Project {
     id: string;
     name: string;
     personId: string;
     pin: boolean;
     organization: string;
 }
-interface ListProps {
-    list: Project[],
+interface ListProps extends TableProps<Project> {
+    // list: Project[],
     users: User[]
 
 }
-export const List = ({list, users}: ListProps) => {
+export const List = ({users, ...props}: ListProps) => {
     return <Table pagination={false} columns={[{
         title: '名称',
         dataIndex: 'name',
@@ -27,7 +27,10 @@ export const List = ({list, users}: ListProps) => {
                 </span>
             )
         }
-    }]} dataSource={list} />
+    }]} 
+    {
+        ...props
+    } />
     // return <table>
     //     <thead>
     //         <tr>
